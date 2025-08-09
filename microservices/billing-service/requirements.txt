@@ -1,4 +1,3 @@
-# En requirements.txt
 Flask
 pika
 requests
