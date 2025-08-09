@@ -1,0 +1,88 @@
+# Deployment de Microservicio Central
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: central-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: central-service
+  template:
+    metadata:
+      labels:
+        app: central-service
+    spec:
+      containers:
+      - name: central-service-container
+        image: tu-usuario/central-service:v1.0
+        ports:
+          - containerPort: 8080
+        envFrom:
+        - secretRef:
+            name: agroflow-secrets
+        - configMapRef:
+            name: agroflow-config
+---
+# Service de Microservicio Central
+apiVersion: v1
+kind: Service
+metadata:
+  name: central-service
+spec:
+  selector:
+    app: central-service
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
+
+---
+# Deployment de Microservicio Inventario
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inventory-service
+  template:
+    metadata:
+      labels:
+        app: inventory-service
+    spec:
+      containers:
+      - name: inventory-service-container
+        image: tu-usuario/inventory-service:v1.0
+        envFrom:
+        - secretRef:
+            name: agroflow-secrets
+        - configMapRef:
+            name: agroflow-config
+---
+# Deployment de Microservicio Facturación
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: billing-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: billing-service
+  template:
+    metadata:
+      labels:
+        app: billing-service
+    spec:
+      containers:
+      - name: billing-service-container
+        image: tu-usuario/billing-service:v1.0
+        envFrom:
+        - secretRef:
+            name: agroflow-secrets
+        - configMapRef:
+            name: agroflow-config

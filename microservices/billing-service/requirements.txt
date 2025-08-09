@@ -1,0 +1,5 @@
+# En requirements.txt
+Flask
+pika
+requests
+mysql-connector-python
